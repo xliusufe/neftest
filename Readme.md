@@ -9,7 +9,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
 
 # Usage
 
-   - [x] [err-manual.pdf](https://github.com/xliusufe/neftest/blob/master/inst/neftest-manual.pdf) ---------- Details of the usage of the package.
+   - [x] [neftest-manual.pdf](https://github.com/xliusufe/neftest/blob/master/inst/neftest-manual.pdf) ---------- Details of the usage of the package.
 # Example
 
     ## Poisson
