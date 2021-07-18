@@ -39,7 +39,7 @@
     xb 		<- rpois(n, lambda = lambdahat)
     Tb[b] <- Tnw(xb, gamma0 = 1, weight = "normal", a = 1.0)
   }
-  pval = mean(quantile(Tb, probs = 1-0.05) > Tn)
+  pval = mean(Tb > Tn)
 
   # Gamma
   n   <- 100
@@ -58,5 +58,5 @@
     xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
     Tb[b] <- Tnw(xb, gamma0 = 1, weight = "normal", a = 1.0)
   }
-  pval = mean(quantile(Tb, probs = 1-0.05) > Tn)
+  pval = mean(Tb > Tn)
 }

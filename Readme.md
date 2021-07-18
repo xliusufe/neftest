@@ -17,7 +17,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     n   <- 100
     distr <- "Poisson"
     x     <- rpois(n,lambda = 1)
-    pval  = pvals(x, distr, signif = 0.05)
+    pval  = pvals(x, distr)
 
     pval
 
@@ -26,7 +26,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     n     <- 100
     distr <- "Gamma"
     x     <- rgamma(n, shape = 1, rate = 1)
-    pval  = pvals(x, distr, signif = 0.05)
+    pval  = pvals(x, distr)
 
     pval
 
@@ -37,7 +37,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     distr <- "Inverse Gaussian"
 
     x     <- rIGauss(n, mu = 1, lambda = 1)
-    pval  = pvals(x, distr, signif = 0.05)
+    pval  = pvals(x, distr)
 
     pval
 

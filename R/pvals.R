@@ -23,7 +23,7 @@ muhat_Gamma <- function(x, alpha){
 }
 
 
-pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05, weight="normal", a = 1.0, max.iter = 100, tol = 1e-8){
+pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="normal", a = 1.0, max.iter = 100, tol = 1e-8){
 	n 	<- length(x)
 	w0 	<- ifelse(weight == "normal", 1, 2)
 	if(distr=="Poisson"){
