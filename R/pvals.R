@@ -36,7 +36,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05
 				xb 		<- rpois(n, lambda = lambdahat)
 				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
-			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
+			pval = mean(Tb > Tn)
 		}
 		else{
 			muhat 		= .Call("muhat_poisson", as.numeric(x), as.integer(n))
@@ -55,7 +55,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05
 				xb 		<- rgamma(n, shape = shapehat, rate = ratehat)
 				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
-			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
+			pval = mean(Tb > Tn)
 		}
 		else{
 			muhat 		= muhat_Gamma(x, shapehat)
@@ -74,7 +74,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05
 				xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
 				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
-			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
+			pval = mean(Tb > Tn)
 		}
 		else{
 			muhat 		= .Call("muhat_Ig", as.numeric(x), as.integer(n))
