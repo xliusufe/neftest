@@ -1,0 +1,26 @@
+Package: neftest
+Type: Package
+Title: Goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions
+Version: 1.0.1
+Authors@R: c(person(given = "Author", family = "Author", role = "aut"),
+             person(given = "Author", family = "Author", role = "aut"),
+             person(given = "Author", family = "Author", role = "aut"),
+             person(given = "Author", family = "Author", role = c("aut", "cre")),
+             person(given = "Author", family = "Author", role = c("aut", "cre"))
+             )
+Author: Author [aut],
+        Author [aut],
+        Author [aut],
+        Author [aut,cre],
+        Author [aut,cre]
+Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
+Description: Provide test statistics for the goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions, and p-value of test statistic according to several specified distributions, which is based on the proposed method.
+License: GPL (>= 2)
+Depends: R (>= 3.2.0)
+Imports: SuppDists
+LazyData: true
+NeedsCompilation: yes
+Repository: CRAN
+URL: https://github.com/xliusufe/neftest
+Encoding: UTF-8
+Packaged: 2021-07-17 07:41:52 UTC; Panpan Ren and Xu Liu <liu.xu@sufe.edu.cn>
