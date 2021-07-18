@@ -44,26 +44,21 @@
   n   <- 100
   NS  <- 500
   distr <- "Poisson"
-  pval  <- rep(NA, NS)
-  set.seed(100861)
-  for (i in 1:NS) {
-    x       <- rpois(n,lambda = 1)
-    pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-  }
-  pvalue = mean(pval<0.05)
+  x     <- rpois(n,lambda = 1)
+  pval  = pvals(x, distr, signif = 0.05)
+
+  pval
 
 
-  # Poisson
+  # Poisson with Bootstrap
   n   <- 100
   NS  <- 500
   B   <- 500
   distr <- "Poisson"
-  pval  <- rep(NA, NS)
-  for(i in 1:NS){
-    x	      <- rpois(n,lambda = 1)
-    pval[i] = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
-  }
-  Pval = mean(pval<0.05)
+  x	    <- rpois(n,lambda = 1)
+  pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
+
+  pval
 
 
 
@@ -71,26 +66,21 @@
   n     <- 100
   NS    <- 500
   distr <- "Gamma"
-  pval  <- rep(NA, NS)
-  set.seed(100861)
-  for (i in 1:NS) {
-    x       <- rgamma(n, shape = 1, rate = 1)
-    pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-  }
-  pvalue = mean(pval<0.05)
+  x     <- rgamma(n, shape = 1, rate = 1)
+  pval  = pvals(x, distr, signif = 0.05)
+
+  pval
 
 
-  # Gamma
+  # Gamma with Bootstrap
   n     <- 100
   NS    <- 500
   B     <- 500
   distr <- "Gamma"
-  pval  <- rep(NA, NS)
-  for(i in 1:NS){
-    x	      <- rgamma(n,lambda = 1)
-    pval[i] = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
-  }
-  Pval = mean(pval<0.05)
+  x	    <- rgamma(n,lambda = 1)
+  pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
+
+  pval
 
 
 
@@ -98,25 +88,20 @@
   n     <- 100
   NS    <- 500
   distr <- "Inverse Gaussian"
-  pval  <- rep(NA, NS)
-  set.seed(100861)
-  for (i in 1:NS) {
-    x       <- rinvGauss(n, nu = 1, lambda = 1)
-    pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-  }
-  pvalue = mean(pval<0.05)
+  x     <- rinvGauss(n, nu = 1, lambda = 1)
+  pval  = pvals(x, distr, signif = 0.05)
+
+  pval
 
 
 
-  # Inverse Gaussian
+  # Inverse Gaussian with Bootstrap
   n     <- 100
   NS    <- 500
   B     <- 500
   distr <- "Inverse Gaussian"
-  pval  <- rep(NA, NS)
-  for(i in 1:NS){
-    x	      <- rinvGauss(n, nu = 1, lambda = 1)
-    pval[i] = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
-  }
-  Pval = mean(pval<0.05)
+  x	    <- rinvGauss(n, nu = 1, lambda = 1)
+  pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
+
+  pval
 }

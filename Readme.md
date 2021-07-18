@@ -17,26 +17,20 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     n   <- 100
     NS  <- 500
     distr <- "Poisson"
-    pval  <- rep(NA, NS)
-    set.seed(100861)
-    for (i in 1:NS) {
-        x       <- rpois(n,lambda = 1)
-        pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-    }
-    pvalue = mean(pval<0.05)
+    x     <- rpois(n,lambda = 1)
+    pval  = pvals(x, distr, signif = 0.05)
+
+    pval
 
     ## Gamma
     library(neftest)
     n     <- 100
     NS    <- 500
     distr <- "Gamma"
-    pval  <- rep(NA, NS)
-    set.seed(100861)
-    for (i in 1:NS) {
-        x       <- rgamma(n, shape = 1, rate = 1)
-        pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-    }
-    pvalue = mean(pval<0.05)
+    x     <- rgamma(n, shape = 1, rate = 1)
+    pval  = pvals(x, distr, signif = 0.05)
+
+    pval
 
 
     ## Inverse Gaussian
@@ -44,13 +38,11 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     n     <- 100
     NS    <- 500
     distr <- "Inverse Gaussian"
-    pval  <- rep(NA, NS)
-    set.seed(100861)
-    for (i in 1:NS) {
-        x       <- rinvGauss(n, nu = 1, lambda = 1)
-        pval[i] = pvals(x, distr, bootstrap = FALSE, B = 1000, signif = 0.05)
-    }
-    pvalue = mean(pval<0.05)
+
+    x     <- rinvGauss(n, nu = 1, lambda = 1)
+    pval  = pvals(x, distr, signif = 0.05)
+
+    pval
 
 # References
 
