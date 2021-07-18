@@ -1,4 +1,4 @@
-import('SuppDists')
+import("SuppDists")
 importFrom("stats", "rgamma", "rpois", "quantile", "pchisq")
 useDynLib(neftest)
 exportPattern("^[[:alpha:]]+")

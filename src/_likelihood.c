@@ -8,12 +8,12 @@
 double mean(double *x, int n)
 {
 	int i;
-	double avg=0.0;
+	double avg = 0.0;
 	for(i=0;i<n;i++)
 	{
 		avg += x[i];
 	}
-	avg/=n;
+	avg /= n;
 	return avg;
 }
 
@@ -55,6 +55,7 @@ void _muhat_IG(double *x, int n, double *mu)
   	{
     	mu[k] = pow(mu[0],2)*mu[k-2]+pow(mu[0],2)*(2*k-1)*mu[k-1]/lambda;
   	}
+    free(y);
 }
 
 SEXP muhat_Ig(SEXP X, SEXP N)
@@ -68,7 +69,7 @@ SEXP muhat_Ig(SEXP X, SEXP N)
     return Mu;
 }
 
-double _sigma_hat(double *L, int gamma)
+double _sigma_hat(double *L, double gamma)
 {
 	double sigma_hat;
 	sigma_hat = pow(L[0],2)*L[5]
@@ -94,7 +95,8 @@ SEXP sigma_hat(SEXP L, SEXP GAMMA)
 {
 	SEXP Sigma;
 	PROTECT(Sigma = allocVector(REALSXP, 1));
-	REAL(Sigma)[0] = _sigma_hat(REAL(L), INTEGER(GAMMA)[0]);
+	REAL(Sigma)[0] = _sigma_hat(REAL(L), REAL(GAMMA)[0]);
+    UNPROTECT(1);
 	return Sigma;
 }
 
@@ -103,21 +105,18 @@ void cal_L(double *x, double *L, int n)
     int i;
     double tmp;
 
-    L[0] = 0.0;
-    L[1] = 0.0;
-    L[2] = 0.0;
-    L[3] = 0.0;
+    for(i=0; i<4; i++) L[i] = 0.0;
 
     for (i = 0; i < n; i++)
     {
-        tmp   = x[i];
-        L[0] += tmp;
-        tmp  *= x[i];
-        L[1] += tmp;
-        tmp  *= x[i];
-        L[2] += tmp;
-        tmp  *= x[i];
-        L[3] += tmp;
+        tmp     = x[i];
+        L[0]    += tmp;
+        tmp     *= x[i];
+        L[1]    += tmp;
+        tmp     *= x[i];
+        L[2]    += tmp;
+        tmp     *= x[i];
+        L[3]    += tmp;
     }
 }
 
@@ -125,33 +124,32 @@ double leave_one_S_hat(double xleave, double *L, int n, double *coe)
 {
     double S_hat, L1, L2, L3, L4, l1, l2, l3, l4;
 
-    S_hat  = xleave;
-    L1     = L[0] - S_hat;
-    S_hat *= xleave;
-    L2     = L[1] - S_hat;
-    S_hat *= xleave;
-    L3     = L[2] - S_hat;
-    S_hat *= xleave;
-    L4     = L[3] - S_hat;
-    l1     = L1/(n-1.0);
-    l2     = L2/(n-1.0);
-    l3     = L3/(n-1.0);
-    l4     = L4/(n-1.0);
+    S_hat   = xleave;
+    L1      = L[0] - S_hat;
+    S_hat   *= xleave;
+    L2      = L[1] - S_hat;
+    S_hat   *= xleave;
+    L3      = L[2] - S_hat;
+    S_hat   *= xleave;
+    L4      = L[3] - S_hat;
+    l1      = L1/(n-1.0);
+    l2      = L2/(n-1.0);
+    l3      = L3/(n-1.0);
+    l4      = L4/(n-1.0);
 
-    S_hat  = coe[0]*pow(l1, 4);
-    S_hat += coe[1]*l2*l2;
-    S_hat += coe[2]*l1*l1*l2;
-    S_hat += coe[3]*l4;
-    S_hat += coe[4]*l1*l3;
+    S_hat   = coe[0]*pow(l1, 4);
+    S_hat   += coe[1]*l2*l2;
+    S_hat   += coe[2]*l1*l1*l2;
+    S_hat   += coe[3]*l4;
+    S_hat   += coe[4]*l1*l3;
 
     return S_hat;
 }
 
-double S_minus(double *x, int n, int gamma, double *sminus)
+double S_minus(double *x, int n, double gamma, double *sminus)
 {
     int i;
-    double *coe;
-    double *L;
+    double *coe, *L, L0;
 
     n--;
     L    = (double*)malloc(sizeof(double)*4);
@@ -172,10 +170,11 @@ double S_minus(double *x, int n, int gamma, double *sminus)
         sminus[i] = leave_one_S_hat(x[i], L, n, coe);
     }
 
-
+    L0 = L[0];
     free(coe);
+    free(L);
 
-    return L[0];
+    return L0;
 }
 
 void leave_one_x_bar(double *x, double *xbar, int n, double L1)
@@ -188,15 +187,15 @@ void leave_one_x_bar(double *x, double *xbar, int n, double L1)
     }
 }
 
-double T_n_w_1(double *x, int n, int gamma, double a) //nT
+double T_n_w_1(double *x, int n, double gamma, double a) //nT
 {
     double tmp, T = 0.0;
     int i, j;
     double *xbar, *L, *Sminus;
 
-    xbar = (double*)malloc(sizeof(double)*n);
-    L    = (double*)malloc(sizeof(double)*4);
-    Sminus = (double*)malloc(sizeof(double)*n);
+    xbar    = (double*)malloc(sizeof(double)*n);
+    L       = (double*)malloc(sizeof(double)*4);
+    Sminus  = (double*)malloc(sizeof(double)*n);
 
 
     L[0]=S_minus(x, n, gamma, Sminus);
@@ -217,22 +216,23 @@ double T_n_w_1(double *x, int n, int gamma, double a) //nT
 
     free(xbar);
     free(L);
+    free(Sminus);
 
     return T;
 }
 
-double T_n_w_2(double *x, int n, int gamma, double a)
+double T_n_w_2(double *x, int n, double gamma, double a)
 {
     double tmp, T = 0.0;
     int i, j;
     double *xbar, *L, *Sminus;
 
-    xbar = (double*)malloc(sizeof(double)*n);
-    L    = (double*)malloc(sizeof(double)*6);
-    Sminus = (double*)malloc(sizeof(double)*n);
+    L       = (double*)malloc(sizeof(double)*6);
+    xbar    = (double*)malloc(sizeof(double)*n);
+    Sminus  = (double*)malloc(sizeof(double)*n);
 
 
-    L[0]=S_minus(x, n, gamma, Sminus);
+    L[0]    = S_minus(x, n, gamma, Sminus);
     leave_one_x_bar(x, xbar, n, L[0]);
 
 
@@ -243,14 +243,15 @@ double T_n_w_2(double *x, int n, int gamma, double a)
     for (i = 0; i < n-1; i++) {
         for (j = i+1; j < n; j++) {
             tmp = pow(a,2)/(pow(a,2)+pow(xbar[i]-xbar[j], 2));
-            T += Sminus[i]*Sminus[j]*tmp*2;
+            T   += Sminus[i]*Sminus[j]*tmp*2;
         }
     }
 
     T /= n;
 
-    free(xbar);
     free(L);
+    free(xbar);
+    free(Sminus);
 
     return T;
 }
@@ -261,11 +262,9 @@ SEXP _Tnw(SEXP X, SEXP N, SEXP GAMMA, SEXP A, SEXP WEIGHT)
     PROTECT(Test = allocVector(REALSXP, 1));
 
     if (INTEGER(WEIGHT)[0] == 1)
-    {
-        REAL(Test)[0] = T_n_w_1(REAL(X), INTEGER(N)[0], INTEGER(GAMMA)[0], REAL(A)[0]);
-    } else if (INTEGER(WEIGHT)[0] == 2) {
-        REAL(Test)[0] = T_n_w_2(REAL(X), INTEGER(N)[0], INTEGER(GAMMA)[0], REAL(A)[0]);
-    }
+        REAL(Test)[0] = T_n_w_1(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
+    else(INTEGER(WEIGHT)[0] == 2)
+        REAL(Test)[0] = T_n_w_2(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
 
     UNPROTECT(1);
     return Test;

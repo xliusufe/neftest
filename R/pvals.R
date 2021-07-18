@@ -28,57 +28,57 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05
 	w0 	<- ifelse(weight == "normal", 1, 2)
 	if(distr=="Poisson"){
 		gamma0 	<- 1
-		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 		if (bootstrap){
 			Tb 			= rep(NA, B)
 			lambdahat 	= mean(x)
 			for(b in 1:B){
 				xb 		<- rpois(n, lambda = lambdahat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
 		}
 		else{
 			muhat 		= .Call("muhat_poisson", as.numeric(x), as.integer(n))
-			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.integer(gamma0))
+			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.numeric(gamma0))
 			pval 		= pchisq(Tn/sigma2hat, df=1, lower.tail = FALSE)
 		}
 	}
 	else if (distr=="Gamma") {
 		gamma0 		<- 2
-		Tn 			<- .Call("_Tnw", as.numeric(x), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 			<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 		shapehat 	= Estimate_shape(x, max.iter, tol)
 		if (bootstrap){
 			Tb 		= rep(NA, B)
 			ratehat = shapehat/mean(x)
 			for(b in 1:B){
 				xb 		<- rgamma(n, shape = shapehat, rate = ratehat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
 		}
 		else{
 			muhat 		= muhat_Gamma(x, shapehat)
-			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.integer(gamma0))
+			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.numeric(gamma0))
 			pval 		= pchisq(Tn/sigma2hat, df=1, lower.tail = FALSE)
 		}
 	}
 	else if (distr=="Inverse Gaussian") {
 		gamma0 	<- 3
-		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 		if (bootstrap){
 			Tb 			= rep(NA, B)
 			nuhat 		= mean(x)
 			lambdahat 	= 1.0/(mean(1/x) - 1.0/nuhat)
 			for(b in 1:B){
 				xb 		<- rinvGauss(n, nu = nuhat, lambda = lambdahat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.integer(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(quantile(Tb, probs = 1-signif) > Tn)
 		}
 		else{
 			muhat 		= .Call("muhat_Ig", as.numeric(x), as.integer(n))
-			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.integer(gamma0))
+			sigma2hat 	= .Call("sigma_hat", as.numeric(muhat), as.numeric(gamma0))
 			pval 		= pchisq(Tn/sigma2hat, df=1, lower.tail = FALSE)
 		}
 	}
