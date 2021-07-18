@@ -15,7 +15,6 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     ## Poisson
     library(neftest)
     n   <- 100
-    NS  <- 500
     distr <- "Poisson"
     x     <- rpois(n,lambda = 1)
     pval  = pvals(x, distr, signif = 0.05)
@@ -25,7 +24,6 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     ## Gamma
     library(neftest)
     n     <- 100
-    NS    <- 500
     distr <- "Gamma"
     x     <- rgamma(n, shape = 1, rate = 1)
     pval  = pvals(x, distr, signif = 0.05)
@@ -36,7 +34,6 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     ## Inverse Gaussian
     library(neftest)
     n     <- 100
-    NS    <- 500
     distr <- "Inverse Gaussian"
 
     x     <- rIGauss(n, mu = 1, lambda = 1)

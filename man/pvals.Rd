@@ -42,7 +42,6 @@
 \examples{
   # Poisson
   n   <- 100
-  NS  <- 500
   distr <- "Poisson"
   x     <- rpois(n,lambda = 1)
   pval  = pvals(x, distr, signif = 0.05)
@@ -52,7 +51,6 @@
 
   # Poisson with Bootstrap
   n   <- 100
-  NS  <- 500
   B   <- 500
   distr <- "Poisson"
   x	    <- rpois(n,lambda = 1)
@@ -64,7 +62,6 @@
 
   # Gamma
   n     <- 100
-  NS    <- 500
   distr <- "Gamma"
   x     <- rgamma(n, shape = 1, rate = 1)
   pval  = pvals(x, distr, signif = 0.05)
@@ -74,7 +71,6 @@
 
   # Gamma with Bootstrap
   n     <- 100
-  NS    <- 500
   B     <- 500
   distr <- "Gamma"
   x	    <- rgamma(n, shape = 1, rate = 1)
@@ -86,7 +82,6 @@
 
   # Inverse Gaussian
   n     <- 100
-  NS    <- 500
   distr <- "Inverse Gaussian"
   x     <- rIGauss(n, mu = 1, lambda = 1)
   pval  = pvals(x, distr, signif = 0.05)
@@ -97,7 +92,6 @@
 
   # Inverse Gaussian with Bootstrap
   n     <- 100
-  NS    <- 500
   B     <- 500
   distr <- "Inverse Gaussian"
   x	    <- rIGauss(n, mu = 1, lambda = 1)
