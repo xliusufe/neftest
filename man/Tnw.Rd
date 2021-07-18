@@ -48,14 +48,14 @@
 
   # Inverse Gaussian
   n   <- 100
-  x   <- rinvGauss(n, nu = 1, lambda = 1)
+  x   <- rIGauss(n, mu = 1, lambda = 1)
   B   <- 1000
   Tn  <- Tnw(x, gamma0 = 1, weight = "normal", a = 1.0)
   Tb 	= rep(NA, B)
   nuhat 	= mean(x)
   lambdahat = (mean(1/x)-nuhat^(-1))^(-1)
   for(b in 1:B){
-    xb 		<- rinvGauss(n, nu = nuhat, lambda = lambdahat)
+    xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
     Tb[b] <- Tnw(xb, gamma0 = 1, weight = "normal", a = 1.0)
   }
   pval = mean(quantile(Tb, probs = 1-0.05) > Tn)

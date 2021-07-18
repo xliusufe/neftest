@@ -5,6 +5,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void _rinvGauss(double *rig, double *runif, double* rnorm, int n, double mu, double lambda){
+    int i;
+	double v, x, b = 0.5*mu/lambda, a = mu*b, c = 4.0*mu*lambda, d = mu*mu;
+
+	for (i=0; i<n; i++) {
+		if (mu<=0 || lambda<=0)
+			rig[i] = 0.0;
+		else {
+			v   = rnorm[i]*rnorm[i];
+			x   = mu + a*v - b*sqrt(c*v + d*v*v);
+			rig[i]=(runif[i]<(mu/(mu+x)))?x:d/x;
+			if (rig[i]<0.0)
+				v = x;
+		}
+	}
+}
+
 double mean(double *x, int n)
 {
 	int i;
@@ -27,16 +44,6 @@ void _muhat_Poisson(double *x, int n, double *mu)
   	mu[5] = mu[0]*(pow(mu[0],5)+15*pow(mu[0],4)+65*pow(mu[0],3)+90*pow(mu[0],2)+31*mu[0]+1);
 }
 
-SEXP muhat_poisson(SEXP X, SEXP N)
-{
-    SEXP Mu;
-    PROTECT(Mu = allocVector(REALSXP, 6));
-
-    _muhat_Poisson(REAL(X), INTEGER(N)[0], REAL(Mu));
-
-    UNPROTECT(1);
-    return Mu;
-}
 
 void _muhat_IG(double *x, int n, double *mu)
 {
@@ -56,17 +63,6 @@ void _muhat_IG(double *x, int n, double *mu)
     	mu[k] = pow(mu[0],2)*mu[k-2]+pow(mu[0],2)*(2*k-1)*mu[k-1]/lambda;
   	}
     free(y);
-}
-
-SEXP muhat_Ig(SEXP X, SEXP N)
-{
-    SEXP Mu;
-    PROTECT(Mu = allocVector(REALSXP, 6));
-
-    _muhat_IG(REAL(X), INTEGER(N)[0], REAL(Mu));
-
-    UNPROTECT(1);
-    return Mu;
 }
 
 double _sigma_hat(double *L, double gamma)
@@ -89,15 +85,6 @@ double _sigma_hat(double *L, double gamma)
                - 4*gamma*gamma*pow(L[1],4)
                + (8-4*gamma)*(8-4*gamma)*pow(L[0],6)*L[1];
 	return sigma_hat;
-}
-
-SEXP sigma_hat(SEXP L, SEXP GAMMA)
-{
-	SEXP Sigma;
-	PROTECT(Sigma = allocVector(REALSXP, 1));
-	REAL(Sigma)[0] = _sigma_hat(REAL(L), REAL(GAMMA)[0]);
-    UNPROTECT(1);
-	return Sigma;
 }
 
 void cal_L(double *x, double *L, int n)
@@ -254,6 +241,48 @@ double T_n_w_2(double *x, int n, double gamma, double a)
     free(Sminus);
 
     return T;
+}
+
+SEXP RINV_GAUSS(SEXP RUNIF, SEXP RNORM, SEXP N, SEXP MU, SEXP LAM)
+{
+    int n = INTEGER(N)[0];
+	SEXP rIG;
+	PROTECT(rIG = allocVector(REALSXP, n));
+    _rinvGauss(REAL(rIG), REAL(RUNIF), REAL(RNORM), n, REAL(MU)[0], REAL(LAM)[0]);
+
+    UNPROTECT(1);
+	return rIG;
+}
+
+SEXP sigma_hat(SEXP L, SEXP GAMMA)
+{
+	SEXP Sigma;
+	PROTECT(Sigma = allocVector(REALSXP, 1));
+	REAL(Sigma)[0] = _sigma_hat(REAL(L), REAL(GAMMA)[0]);
+    UNPROTECT(1);
+	return Sigma;
+}
+
+SEXP muhat_Ig(SEXP X, SEXP N)
+{
+    SEXP Mu;
+    PROTECT(Mu = allocVector(REALSXP, 6));
+
+    _muhat_IG(REAL(X), INTEGER(N)[0], REAL(Mu));
+
+    UNPROTECT(1);
+    return Mu;
+}
+
+SEXP muhat_poisson(SEXP X, SEXP N)
+{
+    SEXP Mu;
+    PROTECT(Mu = allocVector(REALSXP, 6));
+
+    _muhat_Poisson(REAL(X), INTEGER(N)[0], REAL(Mu));
+
+    UNPROTECT(1);
+    return Mu;
 }
 
 SEXP _Tnw(SEXP X, SEXP N, SEXP GAMMA, SEXP A, SEXP WEIGHT)

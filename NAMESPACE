@@ -1,5 +1,4 @@
-import("SuppDists")
-importFrom("stats", "rgamma", "rpois", "quantile", "pchisq")
+importFrom("stats", "rgamma", "rpois", "quantile", "pchisq", "rnorm", "runif")
 useDynLib(neftest)
 exportPattern("^[[:alpha:]]+")
-export(pvals, Tnw)
+export(pvals, Tnw, rIGauss)

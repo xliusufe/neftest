@@ -71,7 +71,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, signif = 0.05
 			nuhat 		= mean(x)
 			lambdahat 	= 1.0/(mean(1/x) - 1.0/nuhat)
 			for(b in 1:B){
-				xb 		<- rinvGauss(n, nu = nuhat, lambda = lambdahat)
+				xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
 				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(quantile(Tb, probs = 1-signif) > Tn)

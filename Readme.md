@@ -39,7 +39,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     NS    <- 500
     distr <- "Inverse Gaussian"
 
-    x     <- rinvGauss(n, nu = 1, lambda = 1)
+    x     <- rIGauss(n, mu = 1, lambda = 1)
     pval  = pvals(x, distr, signif = 0.05)
 
     pval

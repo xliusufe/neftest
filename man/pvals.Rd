@@ -39,7 +39,7 @@
 \references{Authors (2021). Goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions. Manuscript.
 }
 
-\examples{ 
+\examples{
   # Poisson
   n   <- 100
   NS  <- 500
@@ -77,7 +77,7 @@
   NS    <- 500
   B     <- 500
   distr <- "Gamma"
-  x	    <- rgamma(n,lambda = 1)
+  x	    <- rgamma(n, shape = 1, rate = 1)
   pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
 
   pval
@@ -88,7 +88,7 @@
   n     <- 100
   NS    <- 500
   distr <- "Inverse Gaussian"
-  x     <- rinvGauss(n, nu = 1, lambda = 1)
+  x     <- rIGauss(n, mu = 1, lambda = 1)
   pval  = pvals(x, distr, signif = 0.05)
 
   pval
@@ -100,7 +100,7 @@
   NS    <- 500
   B     <- 500
   distr <- "Inverse Gaussian"
-  x	    <- rinvGauss(n, nu = 1, lambda = 1)
+  x	    <- rIGauss(n, mu = 1, lambda = 1)
   pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
 
   pval
