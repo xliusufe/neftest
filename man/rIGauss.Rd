@@ -13,9 +13,9 @@
 \arguments{
   \item{n}{Number of random numbers to be generated.}
 
-  \item{mu}{shape parameters \eqn{\mu}. Default is 1.}
+  \item{mu}{Shape parameter \eqn{\mu}. Default is 1.}
 
-  \item{lambda}{scale parameters \eqn{\lambda}. Default is 1.}
+  \item{lambda}{Scale parameter \eqn{\lambda}. Default is 1.}
 }
 
 \details{
