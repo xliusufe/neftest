@@ -263,7 +263,7 @@ SEXP _Tnw(SEXP X, SEXP N, SEXP GAMMA, SEXP A, SEXP WEIGHT)
 
     if (INTEGER(WEIGHT)[0] == 1)
         REAL(Test)[0] = T_n_w_1(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
-    else(INTEGER(WEIGHT)[0] == 2)
+    else
         REAL(Test)[0] = T_n_w_2(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
 
     UNPROTECT(1);
