@@ -93,7 +93,7 @@
   B     <- 500
   distr <- "Inverse Gaussian"
   x	    <- rIGauss(n, mu = 1, lambda = 1)
-  pval  = pvals(x, distr, bootstrap = TRUE, B = B, signif = 0.05)
+  pval  = pvals(x, distr, bootstrap = TRUE, B = B)
 
   pval
 }
