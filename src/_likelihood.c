@@ -176,17 +176,16 @@ void leave_one_x_bar(double *x, double *xbar, int n, double L1)
 
 double T_n_w_1(double *x, int n, double gamma, double a) //nT
 {
-    double tmp, T = 0.0;
+    double tmp, L0, T = 0.0;
     int i, j;
-    double *xbar, *L, *Sminus;
+    double *xbar, *Sminus;
 
     xbar    = (double*)malloc(sizeof(double)*n);
-    L       = (double*)malloc(sizeof(double)*4);
     Sminus  = (double*)malloc(sizeof(double)*n);
 
 
-    L[0]=S_minus(x, n, gamma, Sminus);
-    leave_one_x_bar(x, xbar, n, L[0]);
+    L0      = S_minus(x, n, gamma, Sminus);
+    leave_one_x_bar(x, xbar, n, L0);
 
 
     for (i = 0; i < n; i++)
@@ -202,7 +201,6 @@ double T_n_w_1(double *x, int n, double gamma, double a) //nT
     T /= n;
 
     free(xbar);
-    free(L);
     free(Sminus);
 
     return T;
@@ -210,17 +208,16 @@ double T_n_w_1(double *x, int n, double gamma, double a) //nT
 
 double T_n_w_2(double *x, int n, double gamma, double a)
 {
-    double tmp, T = 0.0;
+    double tmp, L0, T = 0.0;
     int i, j;
     double *xbar, *L, *Sminus;
 
-    L       = (double*)malloc(sizeof(double)*6);
     xbar    = (double*)malloc(sizeof(double)*n);
     Sminus  = (double*)malloc(sizeof(double)*n);
 
 
-    L[0]    = S_minus(x, n, gamma, Sminus);
-    leave_one_x_bar(x, xbar, n, L[0]);
+    L0      = S_minus(x, n, gamma, Sminus);
+    leave_one_x_bar(x, xbar, n, L0);
 
 
 
@@ -236,7 +233,6 @@ double T_n_w_2(double *x, int n, double gamma, double a)
 
     T /= n;
 
-    free(L);
     free(xbar);
     free(Sminus);
 
