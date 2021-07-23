@@ -1,5 +1,5 @@
 # neftest
-R package "neftest" for the goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions. Provide p-values of test statistics according to several specified distributions, which is based on the method introduced by Authors (2021).
+R package "neftest" for the goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions. Provide p-values of test statistics according to several specified distributions, and the test statistic for the general NEF-PVFs, which is based on the method introduced by Authors (2021).
 
 # Installation
 
@@ -14,10 +14,10 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
 
     ## Poisson
     library(neftest)
-    n   <- 100
+    n     <- 100
     distr <- "Poisson"
     x     <- rpois(n,lambda = 1)
-    pval  = pvals(x, distr)
+    pval  <- pvals(x, distr)
 
     pval
 
@@ -26,7 +26,7 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     n     <- 100
     distr <- "Gamma"
     x     <- rgamma(n, shape = 1, rate = 1)
-    pval  = pvals(x, distr)
+    pval  <- pvals(x, distr)
 
     pval
 
@@ -35,9 +35,8 @@ R package "neftest" for the goodness of fit tests based on zero regression chara
     library(neftest)
     n     <- 100
     distr <- "Inverse Gaussian"
-
     x     <- rIGauss(n, mu = 1, lambda = 1)
-    pval  = pvals(x, distr)
+    pval  <- pvals(x, distr)
 
     pval
 

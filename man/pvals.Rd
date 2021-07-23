@@ -16,7 +16,7 @@
 
   \item{distr}{The true distribution including Poisson distribution \code{distr = "Poisson"}, Gamma distribution \code{distr = "Gamma"} and Inverse Gaussian distribution \code{distr = "Inverse Gaussian"}. Default is \code{distr = "Poisson"}.}
 
-  \item{bootstrap}{logical. Bootstrap method is used to compute the p-value if FALSE (default), and the maximum likelihood method otherwise.}
+  \item{bootstrap}{logical. The bootstrap method is used to compute the p-value if FALSE (default), and the maximum likelihood method otherwise.}
 
   \item{B}{Number of bootstrap samples. Default is 1000.}
 
@@ -30,7 +30,7 @@
 }
 
 \value{
-  \item{pval}{The p-value of the test.}
+  \item{pval}{The p-value of the test statistic.}
 }
 
 
@@ -39,20 +39,20 @@
 
 \examples{
   # Poisson
-  n   <- 100
+  n     <- 100
   distr <- "Poisson"
   x     <- rpois(n,lambda = 1)
-  pval  = pvals(x, distr)
+  pval  <- pvals(x, distr)
 
   pval
 
 
   # Poisson with Bootstrap
-  n   <- 100
-  B   <- 500
+  n     <- 100
+  B     <- 500
   distr <- "Poisson"
   x	    <- rpois(n,lambda = 1)
-  pval  = pvals(x, distr, bootstrap = TRUE, B = B)
+  pval  <- pvals(x, distr, bootstrap = TRUE, B = B)
 
   pval
 
@@ -62,7 +62,7 @@
   n     <- 100
   distr <- "Gamma"
   x     <- rgamma(n, shape = 1, rate = 1)
-  pval  = pvals(x, distr)
+  pval  <- pvals(x, distr)
 
   pval
 
@@ -72,7 +72,7 @@
   B     <- 500
   distr <- "Gamma"
   x	    <- rgamma(n, shape = 1, rate = 1)
-  pval  = pvals(x, distr, bootstrap = TRUE, B = B)
+  pval  <- pvals(x, distr, bootstrap = TRUE, B = B)
 
   pval
 
@@ -82,7 +82,7 @@
   n     <- 100
   distr <- "Inverse Gaussian"
   x     <- rIGauss(n, mu = 1, lambda = 1)
-  pval  = pvals(x, distr)
+  pval  <- pvals(x, distr)
 
   pval
 
@@ -93,7 +93,7 @@
   B     <- 500
   distr <- "Inverse Gaussian"
   x	    <- rIGauss(n, mu = 1, lambda = 1)
-  pval  = pvals(x, distr, bootstrap = TRUE, B = B)
+  pval  <- pvals(x, distr, bootstrap = TRUE, B = B)
 
   pval
 }

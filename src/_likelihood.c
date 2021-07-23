@@ -194,8 +194,8 @@ double T_n_w_1(double *x, int n, double gamma, double a) //nT
 
     for (i = 0; i < n-1; i++) {
         for (j = i+1; j < n; j++) {
-            tmp = exp(-pow(xbar[i]-xbar[j], 2)/4.0*a);
-            T += Sminus[i]*Sminus[j]*tmp*2;
+            tmp = exp(-pow(xbar[i]-xbar[j], 2)/4.0/a);
+            T   += Sminus[i]*Sminus[j]*tmp*2;
         }
     }
 
@@ -229,7 +229,7 @@ double T_n_w_2(double *x, int n, double gamma, double a)
 
     for (i = 0; i < n-1; i++) {
         for (j = i+1; j < n; j++) {
-            tmp = pow(a,2)/(pow(a,2)+pow(xbar[i]-xbar[j], 2));
+            tmp = a*a/(a*a + pow(xbar[i]-xbar[j], 2));
             T   += Sminus[i]*Sminus[j]*tmp*2;
         }
     }

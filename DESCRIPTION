@@ -14,7 +14,7 @@ Author: Author [aut],
         Author [aut,cre],
         Author [aut,cre]
 Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
-Description: Provide test statistics for the goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions, and p-value of test statistic according to several specified distributions, which is based on the proposed method.
+Description: Provide test statistics for the goodness of fit tests based on zero regression characterizations of Tweedie, Bar-Lev and Enis class of distributions, and p-value of test statistic according to several specified distributions and the test statistic for the general NEF-PVFs, which is based on the proposed method.
 License: GPL (>= 2)
 Depends: R (>= 3.2.0)
 LazyData: true
