@@ -7,8 +7,8 @@
   Compute the p-value of the test based on the test statistic \eqn{T_{nw}}.
 }
 
-\usage{pvals(x, distr="Poisson", bootstrap = FALSE, B = 1000, 
-                weight="normal", a = 1.0, max.iter = 100, tol = 1e-8)
+\usage{pvals(x, distr = "Poisson", bootstrap = FALSE, B = 1000, 
+                weight = "normal", a = 1.0, max.iter = 100, tol = 1e-8)
 }
 
 \arguments{

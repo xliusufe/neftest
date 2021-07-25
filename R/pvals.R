@@ -23,7 +23,7 @@ muhat_Gamma <- function(x, alpha){
 }
 
 
-pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="normal", a = 1.0, max.iter = 100, tol = 1e-8){
+pvals <- function(x, distr = "Poisson", bootstrap = FALSE, B = 1000, weight = "normal", a = 1.0, max.iter = 100, tol = 1e-8){
 	n 	<- length(x)
 	w0 	<- ifelse(weight == "normal", 1, 2)
 	if(distr=="Poisson"){
@@ -34,7 +34,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="norma
 			lambdahat 	= mean(x)
 			for(b in 1:B){
 				xb 		<- rpois(n, lambda = lambdahat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(Tb > Tn)
 		}
@@ -53,7 +53,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="norma
 			ratehat = shapehat/mean(x)
 			for(b in 1:B){
 				xb 		<- rgamma(n, shape = shapehat, rate = ratehat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(Tb > Tn)
 		}
@@ -69,10 +69,10 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="norma
 		if (bootstrap){
 			Tb 			= rep(NA, B)
 			nuhat 		= mean(x)
-			lambdahat 	= 1.0/(mean(1/x) - 1.0/nuhat)
+			lambdahat 	= 1.0/(mean(1.0/x) - 1.0/nuhat)
 			for(b in 1:B){
 				xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
-				Tb[b] 	<- .Call("_Tnw", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
 			}
 			pval = mean(Tb > Tn)
 		}
@@ -83,7 +83,7 @@ pvals <- function(x, distr="Poisson", bootstrap = FALSE, B = 1000, weight="norma
 		}
 	}
 	else
-		stop("Distribution must be specified to be 'Poisson', 'Gamma', and 'Inverse Gaussian' !")
+		stop("Distribution must be specified to be one of 'Poisson', 'Gamma', and 'Inverse Gaussian' !")
 
 
 	return (pval)
