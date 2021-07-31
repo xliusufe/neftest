@@ -23,18 +23,18 @@ muhat_Gamma <- function(x, alpha){
 }
 
 
-pvals <- function(x, distr = "Poisson", bootstrap = FALSE, B = 1000, weight = "normal", a = 1.0, max.iter = 100, tol = 1e-8){
+pvals <- function(x, distr = "Poisson", bootstrap = FALSE, B = 1000, weight = 1, a = 1.0, max.iter = 100, tol = 1e-8){
 	n 	<- length(x)
-	w0 	<- ifelse(weight == "normal", 1, 2)
+	if (weight>3) stop("weight must be 1, 2, or 3.")
 	if(distr=="Poisson"){
 		gamma0 	<- 1
-		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 		if (bootstrap){
 			Tb 			= rep(NA, B)
 			lambdahat 	= mean(x)
 			for(b in 1:B){
 				xb 		<- rpois(n, lambda = lambdahat)
-				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 			}
 			pval = mean(Tb > Tn)
 		}
@@ -46,14 +46,14 @@ pvals <- function(x, distr = "Poisson", bootstrap = FALSE, B = 1000, weight = "n
 	}
 	else if (distr=="Gamma") {
 		gamma0 		<- 2
-		Tn 			<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 			<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 		shapehat 	= Estimate_shape(x, max.iter, tol)
 		if (bootstrap){
 			Tb 		= rep(NA, B)
 			ratehat = shapehat/mean(x)
 			for(b in 1:B){
 				xb 		<- rgamma(n, shape = shapehat, rate = ratehat)
-				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 			}
 			pval = mean(Tb > Tn)
 		}
@@ -65,14 +65,14 @@ pvals <- function(x, distr = "Poisson", bootstrap = FALSE, B = 1000, weight = "n
 	}
 	else if (distr=="Inverse Gaussian") {
 		gamma0 	<- 3
-		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+		Tn 		<- .Call("_Tnw", as.numeric(x), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 		if (bootstrap){
 			Tb 			= rep(NA, B)
 			nuhat 		= mean(x)
 			lambdahat 	= 1.0/(mean(1.0/x) - 1.0/nuhat)
 			for(b in 1:B){
 				xb 		<- rIGauss(n, mu = nuhat, lambda = lambdahat)
-				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(w0) )
+				Tb[b] 	<- .Call("_TnwB", as.numeric(xb), as.integer(n), as.numeric(gamma0), as.numeric(a), as.integer(weight) )
 			}
 			pval = mean(Tb > Tn)
 		}

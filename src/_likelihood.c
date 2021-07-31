@@ -136,6 +136,31 @@ double leave_one_S_hat(double xleave, double *L, int n, double *coe)
     return S_hat;
 }
 
+double Shat(double *x, int n, double gamma)
+{
+    double coe1, coe2, coe3, coe4, coe5, *L, S_hat=0.0;
+
+    L       = (double*)malloc(sizeof(double)*4);
+    coe1    = (2-gamma)*(n/(n-1.0))*(n/(n-2.0))*(n/(n-3.0));
+    coe2    = 3*(n/(n-2.0))*(1.0/(n-3.0))-gamma*(n/(n-1.0))*((n*n-3*n+3)/((n-2.0)*(n-3.0)));
+    coe3    = -3*((n+1.0)/(n-1.0))*(n/(n-2.0))*(n/(n-3.0))+2*gamma*(n/(n-1.0))*(n/(n-2.0))*(n/(n-3.0));
+    coe4    = -(n/(n-1.0))*((n+1.0)/(n-2.0))*(1/(n-3.0))+gamma*(n/(n-2.0))/(n-3.0);
+    coe5    = (n/(n-1.0))*((n*n+n+4)/((n-2.0)*(n-3.0)))-4*gamma*(n/(n-2.0))/(n-3.0);
+
+    cal_L(x, L, n);
+    for(int i=0; i<4; i++) L[i] /= n;
+
+    S_hat   = coe1*pow(L[0], 4)
+            + coe2*L[1]*L[1]
+            + coe3*L[0]*L[0]*L[1]
+            + coe4*L[3]
+            + coe5*L[0]*L[2];
+
+    free(L);
+
+    return S_hat;
+}
+
 double S_minus(double *x, int n, double gamma, double *sminus)
 {
     int i;
@@ -177,15 +202,49 @@ void leave_one_x_bar(double *x, double *xbar, int n, double L1)
     }
 }
 
-double exp_approx(double x){
+double exp_approx(double x, int n){
     x = 1.0 + x/256;
-    for (int i = 0; i < 4; i++){
+    for (int i = 0; i < n; i++){
         x *= x;
     }
     return x;
 }
 
-double T_n_w_1(double *x, int n, double gamma, double a) //nT
+double T_n_w_1(double *x, int n, double gamma, double a)
+{
+    double tmp, L0, T = 0.0;
+    int i, j;
+    double *xbar, *Sminus;
+
+    xbar    = (double*)malloc(sizeof(double)*n);
+    Sminus  = (double*)malloc(sizeof(double)*n);
+
+
+    L0      = S_minus(x, n, gamma, Sminus);
+    leave_one_x_bar(x, xbar, n, L0);
+
+
+
+    for (i = 0; i < n; i++)
+        T += Sminus[i]*Sminus[i];
+
+    for (i = 0; i < n-1; i++) {
+        for (j = i+1; j < n; j++) {
+            tmp = (xbar[i]-xbar[j]);
+            tmp = a*a/(a*a + tmp*tmp);
+            T   += Sminus[i]*Sminus[j]*tmp*2;
+        }
+    }
+
+    T /= n;
+
+    free(xbar);
+    free(Sminus);
+
+    return T;
+}
+
+double T_n_w_2(double *x, int n, double gamma, double a) //nT
 {
     double tmp, L0, T = 0.0;
     int i, j;
@@ -218,7 +277,7 @@ double T_n_w_1(double *x, int n, double gamma, double a) //nT
     return T;
 }
 
-double T_n_w_1B(double *x, int n, double gamma, double a) //nT
+double T_n_w_2B(double *x, int n, double gamma, double a) //nT
 {
     double tmp, L0, T = 0.0;
     int i, j;
@@ -238,10 +297,19 @@ double T_n_w_1B(double *x, int n, double gamma, double a) //nT
         for (i = 0; i < n-1; i++) {
             for (j = i+1; j < n; j++) {
                 tmp = (xbar[i]-xbar[j])/2.0;
-                tmp = exp_approx(-tmp*tmp/a);
+                tmp = exp_approx(-tmp*tmp/a, 4);
                 T   += Sminus[i]*Sminus[j]*tmp*2;
             }
         }
+    }
+    else if(n>500){
+        for (i = 0; i < n-1; i++) {
+            for (j = i+1; j < n; j++) {
+                tmp = (xbar[i]-xbar[j])/2.0;
+                tmp = exp_approx(-tmp*tmp/a, 8);
+                T   += Sminus[i]*Sminus[j]*tmp*2;
+            }
+        }        
     }
     else{
         for (i = 0; i < n-1; i++) {
@@ -261,35 +329,35 @@ double T_n_w_1B(double *x, int n, double gamma, double a) //nT
     return T;
 }
 
-double T_n_w_2(double *x, int n, double gamma, double a)
-{
-    double tmp, L0, T = 0.0;
-    int i, j;
-    double *xbar, *L, *Sminus;
+double T_n_w_3(double *x, int n, double gamma){
+    //Tn in formula (15) in Remark 4
+    double T = 0.0;
+    T  = Shat(x, n, gamma);
 
-    xbar    = (double*)malloc(sizeof(double)*n);
+    return n*T*T;
+}
+
+double T_n_w_4(double *x, int n, double gamma){
+    //Tn in Remark 5
+    double L0, T = 0.0;
+    int i, j;
+    double *Sminus;
+
     Sminus  = (double*)malloc(sizeof(double)*n);
 
-
     L0      = S_minus(x, n, gamma, Sminus);
-    leave_one_x_bar(x, xbar, n, L0);
-
-
 
     for (i = 0; i < n; i++)
         T += Sminus[i]*Sminus[i];
 
     for (i = 0; i < n-1; i++) {
         for (j = i+1; j < n; j++) {
-            tmp = (xbar[i]-xbar[j]);
-            tmp = a*a/(a*a + tmp*tmp);
-            T   += Sminus[i]*Sminus[j]*tmp*2;
+            T   += 2*Sminus[i]*Sminus[j];
         }
     }
 
     T /= n;
 
-    free(xbar);
     free(Sminus);
 
     return T;
@@ -344,8 +412,12 @@ SEXP _Tnw(SEXP X, SEXP N, SEXP GAMMA, SEXP A, SEXP WEIGHT)
 
     if (INTEGER(WEIGHT)[0] == 1)
         REAL(Test)[0] = T_n_w_1(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
-    else
+    else if(INTEGER(WEIGHT)[0] == 2)
         REAL(Test)[0] = T_n_w_2(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
+    else if(INTEGER(WEIGHT)[0] == 3)
+        REAL(Test)[0] = T_n_w_3(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0]);
+    else 
+        REAL(Test)[0] = T_n_w_4(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0]);
 
     UNPROTECT(1);
     return Test;
@@ -357,9 +429,13 @@ SEXP _TnwB(SEXP X, SEXP N, SEXP GAMMA, SEXP A, SEXP WEIGHT)
     PROTECT(Test = allocVector(REALSXP, 1));
 
     if (INTEGER(WEIGHT)[0] == 1)
-        REAL(Test)[0] = T_n_w_1B(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
-    else
-        REAL(Test)[0] = T_n_w_2(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
+        REAL(Test)[0] = T_n_w_1(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
+    else if (INTEGER(WEIGHT)[0] == 2)
+        REAL(Test)[0] = T_n_w_2B(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0], REAL(A)[0]);
+    else if (INTEGER(WEIGHT)[0] == 3)
+        REAL(Test)[0] = T_n_w_3(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0]);
+    else 
+        REAL(Test)[0] = T_n_w_4(REAL(X), INTEGER(N)[0], REAL(GAMMA)[0]);
 
     UNPROTECT(1);
     return Test;

@@ -8,7 +8,7 @@
 }
 
 \usage{pvals(x, distr = "Poisson", bootstrap = FALSE, B = 1000, 
-                weight = "normal", a = 1.0, max.iter = 100, tol = 1e-8)
+                weight = 1, a = 1.0, max.iter = 100, tol = 1e-8)
 }
 
 \arguments{
@@ -20,9 +20,11 @@
 
   \item{B}{Number of bootstrap samples. Default is 1000.}
 
-  \item{weight}{The weight functions including normal distribution \code{weight = "normal"} and Laplace distribution \code{weight = "laplace"}. Default is \code{weight = "normal"}.}
+  \item{weight}{The weight functions including Laplace distribution \code{weight = 1} and normal distribution \code{weight = 2}. 
+  \code{weight = 3} denotes the test statistic to be limit of "a" when it goes to \eqn{+\infty} in Remark 5 or the test statistic \eqn{ST_{n,w}} in Remark 4. 
+  Default is \code{weight = 1}.}
 
-  \item{a}{The parameter of the weight function. Default is 1.0. See details in the paper}
+  \item{a}{The parameter of the weight functions. Default is 1.0. See details in the paper}
 
   \item{max.iter}{The maximum number of iterations in Newton method. Default is 100.}
 
